@@ -31,6 +31,11 @@ def authentication_session(access_token: str = Cookie(None)):
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect credentials")
 
 
+@app.get("/")
+def welcome():
+    return {"message": "Hello!"}
+
+
 @app.post("/login", status_code=201)
 def create_session(request: Request, response:Response, auth: bool = Depends(authentication_basic)):
     token = sha512(bytes(f"{uuid.uuid4().hex}{app.secret_key}{request.headers['authorization']}","utf-8", )).hexdigest()
