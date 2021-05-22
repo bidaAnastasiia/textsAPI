@@ -54,6 +54,8 @@ def logout(auth: bool = Depends(authentication_session)):
 
 @app.post("/message")
 def add_message(message: Message, auth: bool = Depends(authentication_session)):
+    if len(message.message_text) == 0:
+        return {"info": "message is too short - 0 signs!"}
     len_list = len(app.messages_list)
     if len_list == 0:
         message.id = 0
