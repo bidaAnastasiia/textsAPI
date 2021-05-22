@@ -6,7 +6,7 @@ import secrets
 from fastapi import FastAPI, Request, Response, status, Depends, Cookie
 from fastapi.exceptions import HTTPException
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
-from starlette.responses import  RedirectResponse
+from starlette.responses import RedirectResponse
 from message import Message
 
 app = FastAPI()
@@ -58,7 +58,7 @@ def logout(auth: bool = Depends(authentication_session)):
 
 @app.post("/message", status_code=201)
 def add_message(message: Message, auth: bool = Depends(authentication_session)):
-    if len(message.message_text) == 0:
+    if len(message.message_text) == 0 or len(message.message_text) > 160:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     len_list = len(app.messages_list)
     if len_list == 0:
