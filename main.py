@@ -27,7 +27,6 @@ def authentication_basic(credentials: HTTPBasicCredentials = Depends(HTTPBasic()
 
 def authentication_session(access_token: str = Cookie(None)):
     if app.access_token and access_token == app.access_token:
-        print("true")
         return True
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect credentials")
 
@@ -52,18 +51,17 @@ def logout(auth: bool = Depends(authentication_session)):
     return response
 
 
-@app.post("/message")
+@app.post("/message", status_code=201)
 def add_message(message: Message, auth: bool = Depends(authentication_session)):
     if len(message.message_text) == 0:
-        return {"info": "message is too short - 0 signs!"}
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     len_list = len(app.messages_list)
     if len_list == 0:
         message.id = 0
     else:
         message.id = app.messages_list[len_list-1].id +1
     app.messages_list.append(message)
-    print(app.messages_list)
-    return {"info": "message created"}
+    return {"info": "message created", "id": message.id, "message text": message.message_text}
 
 
 @app.get("/message/{id}")
