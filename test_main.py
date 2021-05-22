@@ -152,6 +152,25 @@ def test_edit_with_auth():
     client.delete("/logout")
 
 
+def test_edit_gt160signs_with_auth():
+    message = "test_edit_with_auth"
+    edition = "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling. The novels " \
+              "chronicle the lives of a young wizard, Harry Potter, and his friends Hermione Granger and Ron Weasley, " \
+              "all of whom are students at Hogwarts School of Witchcraft and Wizardry. The main story arc concerns " \
+              "Harry's struggle against Lord Voldemort, a dark wizard who intends to become immortal, overthrow the " \
+              "wizard governing body known as the Ministry of Magic and subjugate all wizards and Muggles (" \
+              "non-magical people). "
+    auth = HTTPBasicAuth(username="Someone", password="HisPa$$word007")
+    client.post("/login", auth=auth)
+    client.post("/message", json={"message_text": message})
+
+    response = client.put("/message/" + str(app.messages_list[-1].id), json={"message_text": edition})
+    assert response.status_code == 400, response.text
+    assert response.json() == {"detail": "Bad Request"}
+
+    client.delete("/logout")
+
+
 def test_edit_not_existing_with_auth():
     auth = HTTPBasicAuth(username="Someone", password="HisPa$$word007")
     client.post("/login", auth=auth)

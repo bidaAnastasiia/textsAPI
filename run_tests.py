@@ -20,6 +20,7 @@ test_read_check_views()
 test_edit_with_auth()
 test_edit_not_existing_with_auth()
 test_edit_no_auth()
+test_edit_gt160signs_with_auth()
 
 
 test_delete_no_auth()
