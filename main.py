@@ -85,10 +85,10 @@ def edit_message(id: int, new_message: Message,auth: bool = Depends(authenticati
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     for message in app.messages_list:
         if message.id == id:
-            message.views_counter = 0
             if len(message.message_text + new_message.message_text) >160:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
             message.message_text = message.message_text + new_message.message_text
+            message.views_counter = 0
             return {"info": "message was edited","message": message.message_text, "amount of views": message.views_counter}
 
 
