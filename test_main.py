@@ -71,6 +71,23 @@ def test_add_empty_message_with_auth():
     response1 = client.delete("/logout")
 
 
+def test_add_gt160signs_message_with_auth():
+    auth = HTTPBasicAuth(username="Someone", password="HisPa$$word007")
+    client.post("/login", auth=auth)
+
+    message = "Harry Potter is a series of seven fantasy novels written by British author J. K. Rowling. The novels " \
+              "chronicle the lives of a young wizard, Harry Potter, and his friends Hermione Granger and Ron Weasley, " \
+              "all of whom are students at Hogwarts School of Witchcraft and Wizardry. The main story arc concerns " \
+              "Harry's struggle against Lord Voldemort, a dark wizard who intends to become immortal, overthrow the " \
+              "wizard governing body known as the Ministry of Magic and subjugate all wizards and Muggles (" \
+              "non-magical people). "
+    response_add = client.post("/message", json={"message_text": message})
+    assert response_add.status_code == 400, response_add.text
+    assert response_add.json() == {"detail": "Bad Request"}
+
+    response1 = client.delete("/logout")
+
+
 def test_read_message_no_auth():
     auth = HTTPBasicAuth(username="Someone", password="HisPa$$word007")
     client.post("/login", auth=auth)

@@ -9,6 +9,7 @@ test_logout_invalid_no_credentials()
 test_add_message_with_no_auth()
 test_add_message_with_auth()
 test_add_empty_message_with_auth()
+test_add_gt160signs_message_with_auth()
 
 test_read_message_auth()
 test_read_message_no_auth()
